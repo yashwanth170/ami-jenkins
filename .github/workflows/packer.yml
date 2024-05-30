@@ -48,4 +48,4 @@ jobs:
                      -var "instance_type=t2.micro" \
                      -var "profile=${{ secrets.AWS_PROFILE }}" \
                      -var "ssh_username=ubuntu" \
-                     jenkins.json
+                     jenkins-config.json
