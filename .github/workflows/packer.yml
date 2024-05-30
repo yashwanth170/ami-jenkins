@@ -1,0 +1,51 @@
+name: Build Jenkins AMI
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to trigger the workflow
+
+jobs:
+  packer:
+    name: Build AMI with Packer
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Packer
+      uses: hashicorp/setup-packer@v2
+      with:
+        packer_version: latest
+
+    - name: Install amazon plugin for packer
+      run: |
+        packer plugins install github.com/hashicorp/amazon
+
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y awscli
+
+    - name: Configure AWS Credentials
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      run: |
+        mkdir -p ~/.aws
+        echo "[default]" > ~/.aws/credentials
+        echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+        echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+    
+    - name: Run Packer Build
+      env:
+        AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
+      run: |
+        packer build -var "region=${{ secrets.AWS_DEFAULT_REGION }}" \
+                     -var "source_ami=ami-04b70fa74e45c3917" \
+                     -var "instance_type=t2.micro" \
+                     -var "profile=${{ secrets.AWS_PROFILE }}" \
+                     -var "ssh_username=ubuntu" \
+                     jenkins.json
