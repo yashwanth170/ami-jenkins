@@ -41,11 +41,11 @@ jobs:
     
     - name: Run Packer Build
       env:
-        AWS_PROFILE: ${{ secrets.AWS_PROFILE }}
+        AWS_PROFILE: default
       run: |
         packer build -var "region=${{ secrets.AWS_DEFAULT_REGION }}" \
                      -var "source_ami=ami-04b70fa74e45c3917" \
                      -var "instance_type=t2.micro" \
-                     -var "profile=${{ secrets.AWS_PROFILE }}" \
+                     -var "profile=default" \
                      -var "ssh_username=ubuntu" \
                      jenkins-config.json
