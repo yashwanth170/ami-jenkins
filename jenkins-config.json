@@ -1,0 +1,29 @@
+{
+    "variables": {
+      "region": "us-east-1",
+      "source_ami": "ami-04b70fa74e45c3917",  
+      "instance_type": "t2.micro",
+      "profile": "default",
+      "ssh_username": "ubuntu"
+    },
+    "builders": [
+      {
+        "type": "amazon-ebs",
+        "region": "{{user `region`}}",
+        "source_ami": "{{user `source_ami`}}",
+        "profile": "{{user `profile`}}",
+        "instance_type": "{{user `instance_type`}}",
+        "ssh_username": "{{user `ssh_username`}}",
+        "ami_name": "jenkins-{{timestamp}}",
+        "tags":{
+          "Name": "Jenkins - {{timestamp}}"
+        }
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "script": "script.sh"
+      }
+    ]
+  }
