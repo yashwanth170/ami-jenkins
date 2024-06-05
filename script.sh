@@ -15,7 +15,8 @@ sudo systemctl enable nginx
 
 JENKINS_URL=http://localhost:8080
 JENKINS_CLI_JAR=/var/lib/jenkins/jenkins-cli.jar
-wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar -P /var/lib/jenkins/
+sudo wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar -O $JENKINS_CLI_JAR
+
 
 # Get initial admin password
 ADMIN_PASSWORD=$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)
