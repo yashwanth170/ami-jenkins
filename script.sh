@@ -12,3 +12,19 @@ sudo apt-get install -y nginx
 sudo apt-get install -y nginx certbot python3-certbot-nginx
 sudo systemctl enable jenkins
 sudo systemctl enable nginx
+
+JENKINS_URL=http://localhost:8080
+JENKINS_CLI_JAR=/var/lib/jenkins/jenkins-cli.jar
+wget ${JENKINS_URL}/jnlpJars/jenkins-cli.jar -P /var/lib/jenkins/
+
+# Get initial admin password
+ADMIN_PASSWORD=$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)
+
+# Install desired plugins
+PLUGINS="git workflow-aggregator docker-workflow maven-plugin"
+for plugin in $PLUGINS; do
+  java -jar $JENKINS_CLI_JAR -s $JENKINS_URL -auth admin:$ADMIN_PASSWORD install-plugin $plugin -deploy
+done
+
+# Restart Jenkins to load plugins
+sudo systemctl restart jenkins
