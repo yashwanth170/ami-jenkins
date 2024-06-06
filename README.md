@@ -2,7 +2,7 @@
 
 This repository contains a Packer configuration file (`jenkins-config.json`) and a shell script (`script.sh`) to build an Amazon Machine Image (AMI) for a Jenkins server on AWS using Packer.
 
-## Prerequisites
+## Prerequisites 
 
 Before you begin, ensure you have the following prerequisites installed:
 
